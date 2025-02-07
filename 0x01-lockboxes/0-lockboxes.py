@@ -1,20 +1,30 @@
+#!/usr/bin/python3
+"""
+    Lockboxes problem solution
+"""
+
+
 def canUnlockAll(boxes):
     """
-    Determines if all the boxes can be opened.
-    :param boxes: List of lists, where each sublist contains keys to other boxes.
-    :return: True if all boxes can be opened, else False.
+        Returns a truthy value if all boxes in the array can opened
     """
-    n = len(boxes)
-    opened = set([0])  # Start with the first box unlocked
-    keys = set(boxes[0])  # Collect initial keys from the first box
+    # check if boxes is empty
+    if len(boxes) == 0:
+        return False
 
-    while keys:
-        key = keys.pop()  # Take a key
-        if key < n and key not in opened:  # If key corresponds to a valid and unopened box
-            opened.add(key)  # Mark the box as opened
-            keys.update(boxes[key])  # Add new keys from the newly opened box
-        
-        if len(opened) == n:  # If all boxes are opened, return True
-            return True
-    
-    return len(opened) == n  # Check if all boxes were opened
+    unlocked_set = set()
+    unlocked_set.add(0)
+
+    for index, val in enumerate(boxes):
+        # check if index box can't be unlocked
+        if index not in unlocked_set:
+            return False
+
+        # add key indexes from unlocked box
+        for elem in val:
+            # go to each elem index and update the set
+            if elem < len(boxes) and elem > index:
+                unlocked_set.update(boxes[elem])
+        unlocked_set.update(val)
+
+    return True
