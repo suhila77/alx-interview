@@ -1,41 +1,42 @@
-def sieve(n):
-    """Generate a list indicating prime status for numbers up to n."""
-    primes = [True] * (n + 1)
-    primes[0] = primes[1] = False  # 0 and 1 are not prime
-    for i in range(2, int(n**0.5) + 1):
-        if primes[i]:
-            for j in range(i * i, n + 1, i):
-                primes[j] = False
-    return primes
+#!/usr/bin/python3
+"""0. Prime Game - Maria and Ben are playing a game"""
 
-def count_primes_up_to(n, prime_list):
-    """Count prime numbers up to n using a precomputed prime list."""
-    return sum(prime_list[:n + 1])
 
 def isWinner(x, nums):
-    """Determine the winner of the prime number game."""
-    if not nums or x < 1:
+    """x - rounds
+    nums - numbers list
+    """
+    if x <= 0 or nums is None:
         return None
-    
-    max_n = max(nums)
-    prime_list = sieve(max_n)
-    
-    maria_wins = 0
-    ben_wins = 0
-    
-    for n in nums:
-        prime_count = count_primes_up_to(n, prime_list)
-        
-        # Maria wins if the count of primes is odd, Ben wins if it's even
-        if prime_count % 2 == 1:
-            maria_wins += 1
-        else:
-            ben_wins += 1
-    
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
+    if x != len(nums):
         return None
 
+    ben = 0
+    maria = 0
+
+    a = [1 for x in range(sorted(nums)[-1] + 1)]
+    a[0], a[1] = 0, 0
+    for i in range(2, len(a)):
+        rm_multiples(a, i)
+
+    for i in nums:
+        if sum(a[0:i + 1]) % 2 == 0:
+            ben += 1
+        else:
+            maria += 1
+    if ben > maria:
+        return "Ben"
+    if maria > ben:
+        return "Maria"
+    return None
+
+
+def rm_multiples(ls, x):
+    """removes multiple
+    of primes
+    """
+    for i in range(2, len(ls)):
+        try:
+            ls[i * x] = 0
+        except (ValueError, IndexError):
+            break
