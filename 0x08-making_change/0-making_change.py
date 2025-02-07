@@ -1,21 +1,39 @@
 #!/usr/bin/python3
+""" A function that determines the fewest number of coins
+neededto meet a given amount total
+"""
+
 
 def makeChange(coins, total):
-    if total <= 0:
+    """Determines the fewest number of coins
+    Args:
+        coins (list[int]) : list of different values of changes
+        total (int): The given amount
+
+    Return:
+        change (int): the fewest number of coin
+    """
+
+    if total < 1:
         return 0
 
-    coins.sort(reverse=True)
-    count = 0
+    change = -1
 
-    for coin in coins:
-        if total == 0:
-            break
+    if len(coins):
+        coins = sorted(coins, reverse=True)
+        noOfCoins = len(coins)
+        change = 0
 
-        num_coins = total // coin
-        count += num_coins
-        total -= num_coins * coin
+        for i in range(noOfCoins):
+            while total:
+                # if total >= 1:
+                if total - coins[i] >= 0:
+                    change += 1
+                    total -= coins[i]
+                else:
+                    break
 
-    return count if total == 0 else -1
+        if total != 0:
+            change = -1
 
-print(makeChange([1, 2, 25], 37))
-print(makeChange([1256, 54, 48, 16, 102], 1453))
+    return change
